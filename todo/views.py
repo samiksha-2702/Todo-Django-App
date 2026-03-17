@@ -1,7 +1,12 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,  get_object_or_404
 from .models import Task
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import logout
 
 # Create your views here.
 @login_required
@@ -67,9 +72,6 @@ def edit_task(request, id):
     return render(request, 'todo/edit.html', {'task': task})
     
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.contrib import messages
 def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -88,7 +90,7 @@ def signup(request):
     
     return render(request, 'registration/signup.html')
 
-from django.contrib.auth import logout
+
 def logout_view(request):
     logout(request)
     return redirect('login')  # redirect to login page

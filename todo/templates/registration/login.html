@@ -3,117 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>do·it · login</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap + Icons (matching index page) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <style>
+        /* Base styles matching index page */
         body {
-            background: linear-gradient(to right, #667eea, #764ba2);
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f1f8 100%);
             min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
+        /* Dark mode styles - refined */
+        body.dark-mode {
+            background: linear-gradient(145deg, #1a1c20 0%, #0f1115 100%);
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .glass-card {
+            background: rgba(30, 35, 40, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background: #2d3138;
+            border-color: #40454e;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .form-control:focus,
+        body.dark-mode .form-select:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15);
+        }
+
+        body.dark-mode .form-label {
+            color: #9ca3af;
+        }
+
+        body.dark-mode .text-muted {
+            color: #6b7280 !important;
+        }
+
+        body.dark-mode .alert-danger {
+            background: #451a1a;
+            border-color: #7f1d1d;
+            color: #fca5a5;
+        }
+
+        body.dark-mode .alert-custom {
+            background: #2d1f1f;
+            color: #f87171;
+            border-left-color: #dc2626;
+        }
+
+        body.dark-mode .btn-outline-light {
+            border-color: #4b5563;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .btn-outline-light:hover {
+            background: #4b5563;
+            color: white;
+        }
+
+        /* Navbar style matching index page */
+        .navbar-custom {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            box-shadow: 0 10px 30px -10px rgba(2, 6, 23, 0.3);
+            padding: 14px 0;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .navbar-custom {
+            background: linear-gradient(135deg, #0b0f17 0%, #03050b 100%);
+        }
+
+        /* Glass card effect like index page */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Form container - using glass card style */
         .form-container {
-            background: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 400px;
-            margin: auto;
-            margin-top: 80px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 2.5rem;
         }
 
-        .navbar {
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        /* Form elements matching index page */
+        .form-control, .form-select {
+            border-radius: 14px;
+            border: 1.5px solid #e2e8f0;
+            padding: 12px 16px;
+            transition: border 0.15s ease, box-shadow 0.15s ease;
+            font-size: 0.95rem;
         }
 
-        .dark-mode {
-            background: #121212 !important;
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            outline: none;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons matching index page */
+        .btn-primary {
+            background: linear-gradient(145deg, #667eea, #5a67d8);
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.15s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(145deg, #5a67d8, #4c51bf);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -15px #4c51bf;
+        }
+
+        .btn-outline-light {
+            border-radius: 30px;
+            border-width: 2px;
+            transition: all 0.15s;
+        }
+
+        .btn-outline-light:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Icon wrapper */
+        .icon-wrapper {
+            background: rgba(102, 126, 234, 0.1);
+            width: 70px;
+            height: 70px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .icon-wrapper i {
+            font-size: 2.5rem;
+            color: #667eea;
+        }
+
+        /* Error alert styling */
+        .alert-custom {
+            border-radius: 16px;
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Signup link */
+        .signup-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        .signup-link:hover {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+
+        /* Dark mode toggle button */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 0.375rem 1rem;
             color: white;
+            transition: all 0.15s;
         }
 
-        .dark-mode .form-container {
-            background: #1e1e1e;
-            color: white;
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
     </style>
 </head>
 
 <body>
 
-<!-- 🔥 NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">📝 TodoApp</a>
+<!-- 🔥 NAVBAR – matching index page exactly -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+            <i class="bi bi-check2-circle fs-3"></i>
+            <span style="font-weight: 600;">do·it</span>
+            <span class="badge bg-light text-dark ms-2 rounded-pill px-3 py-1 fw-light">login</span>
+        </a>
 
-        <div class="d-flex">
-            <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
-            <a href="{% url 'signup' %}" class="btn btn-warning btn-sm">Signup</a>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'login' %}" class="btn btn-outline-light rounded-pill px-4 py-1.5 me-2">
+                <i class="bi bi-key me-1"></i>Login
+            </a>
+            <a href="{% url 'signup' %}" class="btn btn-warning rounded-pill px-4 py-1.5 text-dark fw-semibold" style="background: #fbbf24; border: none;">
+                <i class="bi bi-pencil-square me-1"></i>Signup
+            </a>
 
-            <!-- Dark Mode Toggle -->
-            <button onclick="toggleDarkMode()" class="btn btn-outline-light btn-sm ms-2">
-                🌙
+            <!-- Dark Mode Toggle - styled to match -->
+            <button onclick="toggleDarkMode()" class="btn theme-toggle ms-2" id="themeToggle">
+                <i class="bi bi-moon-stars" id="themeIcon"></i>
             </button>
         </div>
     </div>
 </nav>
 
-<!-- 🔥 LOGIN FORM -->
-<div class="container">
+<!-- 🔥 LOGIN FORM - redesigned to match index page -->
+<main class="container">
     <div class="form-container">
+        <div class="glass-card p-4 p-lg-5">
 
-        <h2 class="text-center mb-4 text-primary fw-bold">🔐 Login</h2>
-
-        <!-- Error Messages -->
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                Invalid username or password ❌
+            <!-- Header with icon - matching index page style -->
+            <div class="icon-wrapper">
+                <i class="bi bi-shield-lock"></i>
             </div>
-        {% endif %}
+            
+            <h1 class="h3 fw-bold text-center text-dark mb-2" style="letter-spacing: -0.02em;">🔐 Welcome Back</h1>
+            <p class="text-center text-muted small mb-4">sign in to continue to your tasks</p>
 
-        <form method="POST">
-            {% csrf_token %}
+            <!-- Error Messages - enhanced styling -->
+            {% if form.errors %}
+                <div class="alert alert-custom mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Invalid credentials</strong> — please check your username and password
+                </div>
+            {% endif %}
 
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                {{ form.username }}
+            <!-- Login Form -->
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-person me-1"></i>Username
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-lock me-1"></i>Password
+                    </label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.password.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Optional: Remember me checkbox (you can add if you want) -->
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label text-muted small" for="remember">
+                        Remember me on this device
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3 mb-3">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                </button>
+
+                <!-- Divider -->
+                <div class="position-relative my-4">
+                    <hr class="text-muted opacity-25">
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small" style="background: inherit !important;">or</span>
+                </div>
+
+                <!-- Sign up link -->
+                <p class="text-center mb-0">
+                    <span class="text-muted">Don't have an account?</span>
+                    <a href="{% url 'signup' %}" class="signup-link ms-2">
+                        Create account <i class="bi bi-arrow-right-short"></i>
+                    </a>
+                </p>
+            </form>
+
+            <!-- Demo credentials hint (optional, remove in production) -->
+            <div class="text-center mt-4 pt-3 border-top border-light">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Demo: demo / demodemo123
+                </small>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                {{ form.password }}
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-
-            <p class="text-center mt-3">
-                Don't have an account? 
-                <a href="{% url 'signup' %}">Signup</a>
-            </p>
-        </form>
-
+        </div>
     </div>
-</div>
+</main>
 
-<!-- 🔥 DARK MODE SCRIPT -->
+<!-- 🔥 DARK MODE SCRIPT - enhanced with icon toggle -->
 <script>
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
-
+    const themeIcon = document.getElementById("themeIcon");
+    
     if (document.body.classList.contains("dark-mode")) {
         localStorage.setItem("theme", "dark");
+        themeIcon.classList.remove("bi-moon-stars");
+        themeIcon.classList.add("bi-sun");
     } else {
         localStorage.setItem("theme", "light");
+        themeIcon.classList.remove("bi-sun");
+        themeIcon.classList.add("bi-moon-stars");
     }
 }
 
 window.onload = function() {
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
+        document.getElementById("themeIcon").classList.remove("bi-moon-stars");
+        document.getElementById("themeIcon").classList.add("bi-sun");
     }
 }
+
+// Add animation to form fields
+document.addEventListener('DOMContentLoaded', function() {
+    const formControls = document.querySelectorAll('.form-control');
+    formControls.forEach((input, index) => {
+        input.style.animation = `fadeIn 0.3s ease forwards ${index * 0.1}s`;
+    });
+});
+
+// Add floating label effect (optional)
+document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('focus', function() {
+        this.parentElement.querySelector('.form-label')?.classList.add('text-primary');
+    });
+    
+    input.addEventListener('blur', function() {
+        this.parentElement.querySelector('.form-label')?.classList.remove('text-primary');
+    });
+});
 </script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Add this CSS for animations -->
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .form-control {
+        animation: fadeIn 0.3s ease forwards;
+    }
+    
+    /* Dark mode divider fix */
+    body.dark-mode .position-absolute.bg-white {
+        background: #1e2329 !important;
+    }
+    
+    body.dark-mode .border-light {
+        border-color: #2d3138 !important;
+    }
+</style>
 
 </body>
 </html>

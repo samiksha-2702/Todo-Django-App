@@ -2,178 +2,350 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Todo App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp · Django</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <!-- Custom Styling -->
+    <!-- Custom styling: keep your gradient but refined -->
     <style>
         body {
-            background: linear-gradient(to right, #667eea, #764ba2);
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f1f8 100%);
             min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
-
-        .container {
+        .navbar-brand {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -12px rgba(0,20,30,0.2);
+        }
+        .stat-card {
+            border: none;
+            border-radius: 20px;
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.03);
         }
-
-        .navbar {
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 30px -12px rgba(102, 126, 234, 0.3);
+        }
+        .task-card {
+            border: none;
+            border-radius: 18px;
+            background: white;
+            transition: all 0.2s ease;
+            border-left: 5px solid transparent;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .task-card:hover {
+            box-shadow: 0 12px 24px -12px rgba(102, 126, 234, 0.3);
+            background: #fefefe;
+        }
+        .priority-badge {
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+        }
+        .overdue-flag {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        .btn-action {
+            border-radius: 12px;
+            padding: 6px 12px;
+            margin: 0 2px;
+            transition: all 0.1s ease;
+        }
+        .btn-action:hover {
+            transform: scale(1.05);
+        }
+        .empty-state {
+            background: #f8fafd;
+            border-radius: 36px;
+            padding: 48px 20px;
+            border: 2px dashed #cbd5e1;
+        }
+        /* Custom gradient for navbar to match your original dark but smoother */
+        .navbar-custom {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            box-shadow: 0 10px 30px -10px rgba(2, 6, 23, 0.3);
+            padding: 14px 0;
+        }
+        .form-control, .form-select {
+            border-radius: 14px;
+            border: 1.5px solid #e2e8f0;
+            padding: 10px 16px;
+            transition: border 0.15s ease, box-shadow 0.15s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+        }
+        .btn-primary {
+            background: linear-gradient(145deg, #667eea, #5a67d8);
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            padding: 10px 20px;
+            transition: all 0.15s;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(145deg, #5a67d8, #4c51bf);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -15px #4c51bf;
+        }
+        .btn-outline-light {
+            border-radius: 30px;
+            border-width: 2px;
+        }
+        .search-group {
+            border-radius: 40px;
+            overflow: hidden;
+            border: 1.5px solid #e9eef3;
+            background: white;
+        }
+        .search-group .form-control {
+            border: none;
+            background: transparent;
+        }
+        .search-group .btn {
+            border-radius: 0 40px 40px 0;
+            background: white;
+            border: none;
+            border-left: 1.5px solid #e9eef3;
+            color: #4a5568;
+            font-weight: 500;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .search-group .btn:hover {
+            background: #f1f5f9;
         }
     </style>
 </head>
-
 <body>
 
-<!-- 🔥 NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        
-        <a class="navbar-brand" href="#">📝 TodoApp</a>
+<!-- 🔥 NAVBAR – darker glass with blur, same logout/signup logic -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+            <i class="bi bi-check2-circle fs-3"></span></i>
+            <span style="font-weight: 600;">do·it</span>
+            <span class="badge bg-light text-dark ms-2 rounded-pill px-3 py-1 fw-light">Django</span>
+        </a>
 
-        <div class="d-flex">
+        <div class="d-flex align-items-center gap-2">
             {% if user.is_authenticated %}
-                <span class="text-white me-3">Hello, {{ user.username }}</span>
+                <span class="text-white-50 me-2 d-none d-sm-inline">
+                    <i class="bi bi-person-circle me-1"></i>{{ user.username }}
+                </span>
                 
-                <!--  NEW Logout Form -->
-            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-light btn-sm">
-                    Logout
-                </button>
-            </form>
+                <form method="POST" action="{% url 'logout' %}" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light rounded-pill px-4 py-1.5" style="border-width: 1.5px;">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </button>
+                </form>
             {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">
-                    Login
+                <a href="{% url 'login' %}" class="btn btn-outline-light rounded-pill px-4 py-1.5 me-2">
+                    <i class="bi bi-key me-1"></i>Login
                 </a>
-                <a href="{% url 'signup' %}" class="btn btn-warning btn-sm">
-                    Signup
+                <a href="{% url 'signup' %}" class="btn btn-warning rounded-pill px-4 py-1.5 text-dark fw-semibold" style="background: #fbbf24; border: none;">
+                    <i class="bi bi-pencil-square me-1"></i>Signup
                 </a>
             {% endif %}
         </div>
-
     </div>
 </nav>
 
-<div class="container mt-4">
+<!-- MAIN CONTAINER – softer, bigger radius -->
+<main class="container py-4 mt-2">
+    <div class="glass-card p-4 p-lg-5">
 
-    <!-- Header -->
-    <h1 class="text-center mb-4 text-primary fw-bold">
-        📝 My Todo App
-    </h1>
-
-    <!-- Stats -->
-    <div class="row text-center mb-4">
-
-        <div class="col-md-4">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Tasks</h5>
-                <h3>{{ total }}</h3>
+        <!-- Header with icon + elegant gradient -->
+        <div class="d-flex align-items-center gap-3 mb-5">
+            <div class="bg-primary bg-opacity-10 p-3 rounded-4">
+                <i class="bi bi-list-task text-primary fs-1"></i>
+            </div>
+            <div>
+                <h1 class="display-6 fw-bold text-dark mb-1" style="letter-spacing: -0.02em;">📋 My Todo Dashboard</h1>
+                <p class="text-secondary-emphasis text-muted">stay organized, stay productive</p>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card p-3 shadow-sm">
-                <h5>Completed</h5>
-                <h3 class="text-success">{{ completed }}</h3>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card p-3 shadow-sm">
-                <h5>Pending</h5>
-                <h3 class="text-danger">{{ pending }}</h3>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Search -->
-    <form method="GET" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search tasks">
-            <button class="btn btn-outline-secondary">Search</button>
-        </div>
-    </form>
-
-    <!-- Add Task -->
-    <form method="POST" class="card p-3 shadow mb-4">
-        {% csrf_token %}
-        
-        <div class="row g-2">
+        <!-- Stats – 3 elegant cards (use context vars: total, completed, pending) -->
+        <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <input type="text" name="title" class="form-control" placeholder="Enter task">
+                <div class="stat-card p-3 p-xl-4 d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
+                        <i class="bi bi-inboxes fs-2 text-primary"></i>
+                    </div>
+                    <div>
+                        <span class="text-secondary text-uppercase small fw-semibold tracking-wide">Total tasks</span>
+                        <h2 class="fw-bold mb-0 display-6">{{ total|default:"0" }}</h2>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-md-3">
-                <input type="date" name="due_date" class="form-control">
+            <div class="col-md-4">
+                <div class="stat-card p-3 p-xl-4 d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
+                        <i class="bi bi-check-circle fs-2 text-success"></i>
+                    </div>
+                    <div>
+                        <span class="text-secondary text-uppercase small fw-semibold">Completed</span>
+                        <h2 class="fw-bold mb-0 display-6 text-success">{{ completed|default:"0" }}</h2>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-md-3">
-                <select name="priority" class="form-select">
-                    <option value="Low">Low Priority</option>
-                    <option value="High">High Priority</option>
-                </select>
-            </div>
-
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Add</button>
+            <div class="col-md-4">
+                <div class="stat-card p-3 p-xl-4 d-flex align-items-center">
+                    <div class="bg-warning bg-opacity-10 rounded-3 p-3 me-3">
+                        <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                    </div>
+                    <div>
+                        <span class="text-secondary text-uppercase small fw-semibold">Pending</span>
+                        <h2 class="fw-bold mb-0 display-6 text-warning">{{ pending|default:"0" }}</h2>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
 
-    <!-- Tasks -->
-    {% for task in tasks %}
-    <div class="card mb-3 shadow-sm 
-        {% if task.due_date and task.due_date < today and not task.completed %}
-            border-danger
-        {% endif %}
-    ">
-
-        <div class="card-body d-flex justify-content-between align-items-center">
-
-            <div>
-                <h5 class="mb-1">
-                    {% if task.completed %}
-                        <s>{{ task.title }}</s>
-                    {% else %}
-                        {{ task.title }}
-                    {% endif %}
-                </h5>
-
-                <small>
-                    📅 {{ task.due_date }}
-
-                    {% if task.due_date and task.due_date < today and not task.completed %}
-                        <span class="badge bg-danger">Overdue</span>
-                    {% endif %}
-
-                    {% if task.priority == "High" %}
-                        <span class="badge bg-danger">High</span>
-                    {% else %}
-                        <span class="badge bg-success">Low</span>
-                    {% endif %}
-                </small>
+        <!-- Search + filter (GET) – redesigned pill -->
+        <form method="GET" class="mb-5">
+            <div class="search-group d-flex">
+                <input type="text" name="q" class="form-control form-control-lg" placeholder="🔍 search by title or description..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-lg px-5">
+                    <i class="bi bi-arrow-right"></i> Search
+                </button>
             </div>
+        </form>
 
-            <div>
-                <a href="{% url 'complete' task.id %}" class="btn btn-success btn-sm">✔</a>
-                <a href="{% url 'edit' task.id %}" class="btn btn-warning btn-sm">✏️</a>
-                <a href="{% url 'delete' task.id %}" class="btn btn-danger btn-sm">🗑</a>
+        <!-- Add Task form – modern row layout, with priority & date (POST) -->
+        <form method="POST" class="p-4 mb-5 bg-light bg-opacity-50 rounded-4 border">
+            {% csrf_token %}
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold text-secondary small">Task title</label>
+                    <input type="text" name="title" class="form-control form-control-lg" placeholder="e.g., design review" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-secondary small">Due date</label>
+                    <input type="date" name="due_date" class="form-control form-control-lg">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold text-secondary small">Priority</label>
+                    <select name="priority" class="form-select form-select-lg">
+                        <option value="Low" selected>🐢 Low</option>
+                        <option value="High">⚡ High</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="bi bi-plus-lg me-2"></i>Add
+                    </button>
+                </div>
             </div>
+        </form>
 
+        <!-- Tasks heading + counter -->
+        <div class="d-flex align-items-center justify-content-between mt-2 mb-4">
+            <h4 class="fw-semibold m-0"><i class="bi bi-stack me-2"></i>Your tasks</h4>
+            <span class="badge bg-secondary bg-opacity-10 text-dark rounded-pill px-3 py-2">
+                {{ tasks|length }} total
+            </span>
+        </div>
+
+        <!-- Task loop – with due date / overdue / priority badges, complete/edit/delete -->
+        <div class="task-feed">
+            {% for task in tasks %}
+            <div class="task-card mb-3 p-3 {% if task.due_date and task.due_date < today and not task.completed %}border-start border-danger border-4{% endif %}">
+
+                <div class="row align-items-center g-2">
+                    <!-- Main info: title + meta -->
+                    <div class="col-md-7 col-lg-8">
+                        <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
+                            <h5 class="fw-semibold mb-0 {% if task.completed %}text-muted text-decoration-line-through{% endif %}">
+                                {% if task.completed %}<i class="bi bi-check-circle-fill text-success me-2"></i>{% endif %}
+                                {{ task.title }}
+                            </h5>
+                            {% if task.priority == "High" %}
+                                <span class="priority-badge bg-danger bg-opacity-10 text-danger">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>High
+                                </span>
+                            {% else %}
+                                <span class="priority-badge bg-success bg-opacity-10 text-success">
+                                    <i class="bi bi-arrow-down-circle me-1"></i>Low
+                                </span>
+                            {% endif %}
+                            {% if task.due_date and task.due_date < today and not task.completed %}
+                                <span class="overdue-flag"><i class="bi bi-clock-history me-1"></i>overdue</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-3 small text-secondary">
+                            <span><i class="bi bi-calendar3 me-1"></i> {{ task.due_date|default:"no date" }}</span>
+                            {% if task.completed %}
+                                <span class="text-success"><i class="bi bi-check-circle me-1"></i>completed</span>
+                            {% else %}
+                                <span class="text-warning"><i class="bi bi-hourglass me-1"></i>active</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- action buttons: complete, edit, delete -->
+                    <div class="col-md-5 col-lg-4">
+                        <div class="d-flex justify-content-md-end gap-1">
+                            {% if not task.completed %}
+                            <a href="{% url 'complete' task.id %}" class="btn btn-outline-success btn-action" title="mark complete">
+                                <i class="bi bi-check-lg"></i> Done
+                            </a>
+                            {% else %}
+                            <span class="btn btn-outline-secondary btn-action disabled"><i class="bi bi-check-all"></i> Completed</span>
+                            {% endif %}
+                            
+                            <a href="{% url 'edit' task.id %}" class="btn btn-outline-warning btn-action" title="edit task">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a href="{% url 'delete' task.id %}" class="btn btn-outline-danger btn-action" title="delete task" onclick="return confirm('Delete this task?')">
+                                <i class="bi bi-trash3"></i> Del
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- empty state – nicer with illustration -->
+            <div class="empty-state text-center">
+                <i class="bi bi-emoji-smile fs-1 text-secondary opacity-50"></i>
+                <p class="text-secondary mt-3 mb-2 fw-medium">No tasks yet — your mind is clear ☁️</p>
+                <p class="small text-secondary-emphasis">Use the form above to add your first task</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- subtle footer note (keep original spacing) -->
+        <div class="text-center text-secondary small mt-5 pt-3 border-top border-light">
+            <i class="bi bi-dot"></i> Django todo · smooth edition 
         </div>
     </div>
+</main>
 
-    {% empty %}
-        <p class="text-center text-muted">No tasks yet. Add one! 🚀</p>
-    {% endfor %}
-
-</div>
-
+<!-- Bootstrap JS (optional for some interactions, but not needed) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

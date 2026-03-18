@@ -1,7 +1,5 @@
 # Todo-Django-App
 
-
-id="readme1"
 # 📝 Django Todo App (With Authentication)
 
 A simple Todo List web application built using Django with user authentication.
@@ -11,13 +9,14 @@ A simple Todo List web application built using Django with user authentication.
 - Add Tasks
 - Mark Tasks as Complete
 - Delete Tasks
+- Edit Tasks
 - User-specific task management
 
 ## 🛠 Tech Stack
 - Python
 - Django
 - SQLite
-- HTML/CSS
+- HTML/CSS/Js
 
 ## 📂 Project Structure
 - todo_project/

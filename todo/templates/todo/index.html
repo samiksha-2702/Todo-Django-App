@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <!-- Custom styling: keep your gradient but refined -->
+ 
     <style>
         body {
             background: linear-gradient(145deg, #f6f9fc 0%, #e9f1f8 100%);
@@ -80,7 +80,7 @@
             padding: 48px 20px;
             border: 2px dashed #cbd5e1;
         }
-        /* Custom gradient for navbar to match your original dark but smoother */
+       
         .navbar-custom {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             box-shadow: 0 10px 30px -10px rgba(2, 6, 23, 0.3);
@@ -140,7 +140,7 @@
 </head>
 <body>
 
-<!-- 🔥 NAVBAR – darker glass with blur, same logout/signup logic -->
+
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="#">
@@ -177,7 +177,7 @@
 <main class="container py-4 mt-2">
     <div class="glass-card p-4 p-lg-5">
 
-        <!-- Header with icon + elegant gradient -->
+        <!-- Header with icon -->
         <div class="d-flex align-items-center gap-3 mb-5">
             <div class="bg-primary bg-opacity-10 p-3 rounded-4">
                 <i class="bi bi-list-task text-primary fs-1"></i>
@@ -235,7 +235,7 @@
             </div>
         </form>
 
-        <!-- Add Task form – modern row layout, with priority & date (POST) -->
+        <!-- Add Task form  -->
         <form method="POST" class="p-4 mb-5 bg-light bg-opacity-50 rounded-4 border">
             {% csrf_token %}
             <div class="row g-3 align-items-end">
@@ -345,7 +345,7 @@
     </div>
 </main>
 
-<!-- Bootstrap JS (optional for some interactions, but not needed) -->
+<!-- Bootstrap JS  -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
